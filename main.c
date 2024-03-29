@@ -136,8 +136,6 @@ void evaluate_winner(struct Game* game) {
     if (game->players[i].status == 1) {
       if (game->players[i].handvalue == highestHandValue) {
         game->winners[winners] = game->players[i];
-        printf("%d\n", i);
-        printf("Player %s won\n", game->winners[winners].name);
         game->winner_count++;
         winners++;
       }
@@ -181,6 +179,7 @@ void place_bet(struct Game* game, int player_index, int bet) {
 };
 
 void next_round(struct Game* game) {
+  
   for (int i = 0; i < game->player_count; i++) {
     game->players[i].status = 1;
     game->players[i].betroundsize = 0;
@@ -199,7 +198,6 @@ void next_round(struct Game* game) {
 };
 
 void end_round(struct Game* game) {
-  printf("There are %d winners\n", game->winner_count);
   evaluate_winner(game);
   int not_folded = 0;
   for (int i = 0; i < 10; i++) {
@@ -251,24 +249,24 @@ struct Game make_move_bot3(struct Game game, int player_index) {
 */
 
 bool check_bets_same(struct Game* game) {
-  int buffer = 0;
+  int buffer = -3;
   for (int i = 0; i < game->player_count; i++) {
     if (game->players[i].status == 1) {
-      if (buffer == 0) {
+      if (buffer == -3) {
         buffer = game->players[i].betroundsize;
 
       } else {
         int betcomparation = game->players[i].betroundsize;
+        
         if (betcomparation != buffer) {
-          printf("False\n");
-          printf("Buffer: %d\n", buffer);
-          printf("Betcomparation: %d\n", betcomparation);
+          
           return false;
         }
       }
     }
   }
-  printf("True\n");
+  
+  
   return true;
 };
 
@@ -277,10 +275,7 @@ void player_fold(struct Game* game, int player_index) { game->players[player_ind
 void make_move_bot1(struct Game* game, int player_index) {
   int bet = 0;
   int handstrenght = evaluate_hand(game->players[player_index]);
-  printf("Player %s has handvalue %d\n", game->players[player_index].name, handstrenght);
   printf("Player %s calls\n", game->players[player_index].name);
-  printf("game to call is and player betroundsize is %d %d\n", game->to_call,
-         game->players[player_index].betroundsize);
   bet = game->to_call - game->players[player_index].betroundsize;
   place_bet(game, player_index, bet);
 };
